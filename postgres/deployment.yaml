@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgre-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        envFrom:
+          - secretRef:
+              name: postgres-secret
+        resources:
+          requests: # Mínimo para a aplicação rodar
+            memory: "32Mi"
+            cpu: "100m" # 100m = 10% de 1 CPU, 1000m = 100% de 1 CPU
+          limits: # Máximo que a aplicação pode usar
+            memory: "64Mi"
+            cpu: "500m"

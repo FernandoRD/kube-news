@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: fernandord/kube-news:v1
+        imagePullPolicy: Always
+        resources:
+          requests: # Mínimo para a aplicação rodar
+            memory: "32Mi"
+            cpu: "100m" # 100m = 10% de 1 CPU, 1000m = 100% de 1 CPU
+          limits: # Máximo que a aplicação pode usar
+            memory: "64Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        envFrom:
+          - configMapRef:
+              name: app-configmap
+        env:
+        - name: postgres__User
+          valueFrom:
+            secretKeyRef:
+              key: DB_USERNAME
+              name: postgres-secret
+        - name: postgres__Password
+          valueFrom:
+            secretKeyRef:
+              key: DB_PASSWORD
+              name: postgres-secret
+        - name: postgres__Database
+          valueFrom:
+            secretKeyRef:
+              key: DB_DATABASE
+              name: postgres-secret
+        - name: postgres__Host
+          valueFrom:
+            secretKeyRef:
+              key: DB_HOST
+              name: postgres-secret
+

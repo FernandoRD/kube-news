@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap
+data:
+  postgres__Database: "kubenews"
+  postgres__Host: "postgres"
+  postgres__User: "bW9uZ291c2Vy"
+  postgres__Password: "bW9uZ29wd2Q="
